@@ -321,82 +321,150 @@
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="logo">
-            <h1>TB GAMES</h1>
-            <p>Your ultimate gaming experience</p>
-        </div>
-        
-        <div class="tabs">
-            <div class="tab active" id="login-tab">Login</div>
-            <div class="tab" id="signup-tab">Sign Up</div>
-        </div>
-        
-        <div class="form-container">
-            <!-- Login Form -->
-            <form class="form login-form active" id="login-form">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="login-email" placeholder="Email" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="login-password" placeholder="Password" required>
-                </div>
-                
-                <div class="forgot-password">
-                    <a href="#" id="forgot-password-link">Forgot Password?</a>
-                </div>
-                
-                <div class="message" id="login-message"></div>
-                
-                <button type="submit" class="btn" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-            </form>
-            
-            <!-- Signup Form -->
-            <form class="form signup-form" id="signup-form">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="signup-email" placeholder="Email" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
-                </div>
-                
-                <div class="message" id="signup-message"></div>
-                
-                <button type="submit" class="btn" id="signup-btn">
-                    <i class="fas fa-user-plus"></i> Create Account
-                </button>
-            </form>
-        </div>
-    </div>
+   <!-- In your login.html -->
+<div class="auth-container">
+  <div class="logo">
+    <h1>TB GAMES</h1>
+    <p>Your ultimate gaming experience</p>
+  </div>
+  
+  <div class="tabs">
+    <div class="tab active" id="login-tab">Login</div>
+    <div class="tab" id="signup-tab">Sign Up</div>
+  </div>
+  
+  <div class="form-container">
+    <!-- Login Form -->
+    <form class="form login-form active" id="login-form">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="login-username" placeholder="Username" required>
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="login-password" placeholder="Password" required>
+      </div>
+      
+      <button type="submit" class="btn" id="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+    </form>
     
-    <!-- Password Reset Modal -->
-    <div class="modal" id="reset-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2 style="margin-bottom: 1rem; color: var(--primary);">Reset Password</h2>
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="reset-email" placeholder="Enter your email">
-            </div>
-            <div class="message" id="reset-message"></div>
-            <button class="btn" id="reset-btn" style="margin-top: 1rem;">
-                <i class="fas fa-paper-plane"></i> Send Reset Link
-            </button>
-        </div>
-    </div>
+    <!-- Signup Form -->
+    <form class="form signup-form" id="signup-form">
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="signup-username" placeholder="Username" required>
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="signup-email" placeholder="Email (optional)">
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="signup-password" placeholder="Password" required>
+      </div>
+      
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
+      </div>
+      
+      <button type="submit" class="btn" id="signup-btn">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword 
+  } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
+    getDoc,
+    collection,
+    query,
+    where,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+  
+  // Firebase config (same as before)
+  
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  
+  // Check if username exists
+  async function usernameExists(username) {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("username", "==", username));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+  }
+  
+  // Sign Up with username
+  document.getElementById("signup-btn").addEventListener("click", async () => {
+    const username = document.getElementById("signup-username").value.trim();
+    const email = document.getElementById("signup-email").value;
+    const password = document.getElementById("signup-password").value;
+    const confirm = document.getElementById("signup-confirm").value;
+    
+    // Validation checks
+    if (await usernameExists(username)) {
+      alert("Username already taken!");
+      return;
+    }
+    
+    if (password !== confirm) {
+      alert("Passwords don't match!");
+      return;
+    }
+    
+    try {
+      // Create auth user with email if provided, otherwise with username@game.com
+      const emailToUse = email || `${username}@game.com`;
+      const userCredential = await createUserWithEmailAndPassword(auth, emailToUse, password);
+      
+      // Create user document with username and balance
+      await setDoc(doc(db, "users", userCredential.user.uid), { 
+        username: username,
+        balance: 10000,
+        createdAt: new Date()
+      });
+      
+      alert("Account created! Log in now.");
+      loginTab.click();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+  
+  // Login with username
+  document.getElementById("login-btn").addEventListener("click", async () => {
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value;
+    
+    try {
+      // Try login with username@game.com
+      await signInWithEmailAndPassword(auth, `${username}@game.com`, password);
+      
+      // Redirect to home page after successful login
+      window.location.href = "https://riodev0.github.io/home";
+    } catch (error) {
+      alert("Invalid username or password");
+    }
+  });
+</script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
