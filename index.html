@@ -267,8 +267,8 @@
             <!-- Login Form -->
             <form class="form login-form active" id="login-form">
                 <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="login-username" placeholder="Username" required>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email" required>
                 </div>
                 
                 <div class="input-group">
@@ -290,7 +290,7 @@
                 
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="signup-email" placeholder="Email (optional)">
+                    <input type="email" id="signup-email" placeholder="Email" required>
                 </div>
                 
                 <div class="input-group">
@@ -339,7 +339,6 @@
         const signupTab = document.getElementById('signup-tab');
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
-        const formContainer = document.querySelector('.form-container');
 
         // Tab switching
         function switchForms(form) {
@@ -348,18 +347,13 @@
                 signupTab.classList.remove('active');
                 loginForm.classList.add('active');
                 signupForm.classList.remove('active');
-                formContainer.style.minHeight = '350px';
             } else {
                 signupTab.classList.add('active');
                 loginTab.classList.remove('active');
                 signupForm.classList.add('active');
                 loginForm.classList.remove('active');
-                formContainer.style.minHeight = '450px';
             }
         }
-
-        loginTab.addEventListener('click', () => switchForms('login'));
-        signupTab.addEventListener('click', () => switchForms('signup'));
 
         // Check if username exists
         async function usernameExists(username) {
@@ -391,6 +385,16 @@
             return true;
         }
 
+        // Validate email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!re.test(email)) {
+                showMessage('signup', 'Please enter a valid email address', 'error');
+                return false;
+            }
+            return true;
+        }
+
         // Show message
         function showMessage(form, text, type) {
             const element = document.getElementById(`${form}-message`) || document.createElement('div');
@@ -414,18 +418,19 @@
             e.preventDefault();
             
             const username = document.getElementById("signup-username").value.trim();
-            const email = document.getElementById("signup-email").value;
+            const email = document.getElementById("signup-email").value.trim();
             const password = document.getElementById("signup-password").value;
             const confirm = document.getElementById("signup-confirm").value;
             const btn = document.getElementById("signup-btn");
             
             // Validation
-            if (!username || !password || !confirm) {
-                showMessage('signup', 'Please fill in all required fields', 'error');
+            if (!username || !email || !password || !confirm) {
+                showMessage('signup', 'Please fill in all fields', 'error');
                 return;
             }
             
             if (!validateUsername(username)) return;
+            if (!validateEmail(email)) return;
             
             if (password !== confirm) {
                 showMessage('signup', 'Passwords do not match', 'error');
@@ -450,12 +455,12 @@
                 }
                 
                 // Create auth user
-                const emailToUse = email || `${username}@game.com`;
-                const userCredential = await auth.createUserWithEmailAndPassword(emailToUse, password);
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 
                 // Create user document
                 await db.collection("users").doc(userCredential.user.uid).set({ 
                     username: username,
+                    email: email,
                     balance: 10000,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
@@ -473,12 +478,13 @@
             } catch (error) {
                 console.error("Signup error:", error);
                 let errorMessage = "Signup failed. Please try again.";
+                
                 if (error.code === "auth/email-already-in-use") {
-                    errorMessage = "Account already exists";
-                } else if (error.code === "auth/weak-password") {
-                    errorMessage = "Password is too weak (min 6 characters)";
+                    errorMessage = "Email already in use";
                 } else if (error.code === "auth/invalid-email") {
                     errorMessage = "Invalid email format";
+                } else if (error.code === "auth/weak-password") {
+                    errorMessage = "Password is too weak (min 6 characters)";
                 }
                 
                 showMessage('signup', errorMessage, 'error');
@@ -491,12 +497,12 @@
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById("login-username").value.trim();
+            const email = document.getElementById("login-email").value.trim();
             const password = document.getElementById("login-password").value;
             const btn = document.getElementById("login-btn");
             
-            if (!username || !password) {
-                showMessage('login', 'Please enter both username and password', 'error');
+            if (!email || !password) {
+                showMessage('login', 'Please enter both email and password', 'error');
                 return;
             }
             
@@ -504,8 +510,7 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
             
             try {
-                // Try login with username@game.com
-                await auth.signInWithEmailAndPassword(`${username}@game.com`, password);
+                await auth.signInWithEmailAndPassword(email, password);
                 
                 // Update last login time
                 const user = auth.currentUser;
@@ -521,12 +526,13 @@
             } catch (error) {
                 console.error("Login error:", error);
                 let errorMessage = "Login failed. Please try again.";
+                
                 if (error.code === "auth/user-not-found") {
-                    errorMessage = "Username not found";
+                    errorMessage = "Email not found";
                 } else if (error.code === "auth/wrong-password") {
                     errorMessage = "Incorrect password";
-                } else if (error.code === "auth/too-many-requests") {
-                    errorMessage = "Too many attempts. Try again later.";
+                } else if (error.code === "auth/invalid-email") {
+                    errorMessage = "Invalid email format";
                 }
                 
                 showMessage('login', errorMessage, 'error');
@@ -535,8 +541,12 @@
             }
         });
 
-        // Initialize form heights
+        // Initialize form
         switchForms('login');
+
+        // Add event listeners for tabs
+        loginTab.addEventListener('click', () => switchForms('login'));
+        signupTab.addEventListener('click', () => switchForms('signup'));
     </script>
 </body>
 </html>
