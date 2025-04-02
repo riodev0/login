@@ -118,7 +118,7 @@
         }
         
         .form-container {
-            min-height: 380px;
+            min-height: 350px;
             position: relative;
             overflow: visible;
             margin-bottom: 20px;
@@ -241,10 +241,6 @@
                 padding: 1.5rem;
             }
             
-            .form-container {
-                min-height: 420px;
-            }
-            
             .logo h1 {
                 font-size: 2rem;
             }
@@ -284,11 +280,6 @@
             <!-- Signup Form -->
             <form class="form signup-form" id="signup-form">
                 <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="signup-username" placeholder="Username" required>
-                </div>
-                
-                <div class="input-group">
                     <i class="fas fa-envelope"></i>
                     <input type="email" id="signup-email" placeholder="Email" required>
                 </div>
@@ -316,7 +307,6 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -332,7 +322,6 @@
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
 
         // DOM elements
         const loginTab = document.getElementById('login-tab');
@@ -353,36 +342,6 @@
                 signupForm.classList.add('active');
                 loginForm.classList.remove('active');
             }
-        }
-
-        // Check if username exists
-        async function usernameExists(username) {
-            try {
-                const usersRef = db.collection("users");
-                const q = usersRef.where("username", "==", username);
-                const querySnapshot = await q.get();
-                return !querySnapshot.empty;
-            } catch (error) {
-                console.error("Error checking username:", error);
-                return false;
-            }
-        }
-
-        // Validate username
-        function validateUsername(username) {
-            const re = /^[a-zA-Z0-9_]{3,20}$/;
-            if (!re.test(username)) {
-                showMessage('signup', 'Username must be 3-20 characters (letters, numbers, underscores)', 'error');
-                return false;
-            }
-            
-            const reserved = ['admin', 'root', 'system', 'moderator'];
-            if (reserved.includes(username.toLowerCase())) {
-                showMessage('signup', 'This username is reserved', 'error');
-                return false;
-            }
-            
-            return true;
         }
 
         // Validate email
@@ -417,19 +376,17 @@
         signupForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             
-            const username = document.getElementById("signup-username").value.trim();
             const email = document.getElementById("signup-email").value.trim();
             const password = document.getElementById("signup-password").value;
             const confirm = document.getElementById("signup-confirm").value;
             const btn = document.getElementById("signup-btn");
             
             // Validation
-            if (!username || !email || !password || !confirm) {
+            if (!email || !password || !confirm) {
                 showMessage('signup', 'Please fill in all fields', 'error');
                 return;
             }
             
-            if (!validateUsername(username)) return;
             if (!validateEmail(email)) return;
             
             if (password !== confirm) {
@@ -446,25 +403,8 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
             
             try {
-                // Check if username exists
-                if (await usernameExists(username)) {
-                    showMessage('signup', 'Username already taken', 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
-                    return;
-                }
-                
                 // Create auth user
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                
-                // Create user document
-                await db.collection("users").doc(userCredential.user.uid).set({ 
-                    username: username,
-                    email: email,
-                    balance: 10000,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                await auth.createUserWithEmailAndPassword(email, password);
                 
                 // Success
                 showMessage('signup', 'Account created! Logging you in...', 'success');
@@ -511,14 +451,6 @@
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
-                
-                // Update last login time
-                const user = auth.currentUser;
-                if (user) {
-                    await db.collection("users").doc(user.uid).update({
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                }
                 
                 // Redirect to home
                 window.location.href = "https://riodev0.github.io/home";
