@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Login | Cyber Casino</title>
+    <title>Neon Login | TB Games</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -21,10 +21,10 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--dark);
             color: var(--light);
             min-height: 100vh;
@@ -34,49 +34,11 @@
             background-image: 
                 radial-gradient(circle at 20% 30%, rgba(0, 255, 204, 0.1) 0%, transparent 20%),
                 radial-gradient(circle at 80% 70%, rgba(255, 0, 170, 0.1) 0%, transparent 20%);
-            overflow-x: hidden;
         }
         
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: float 15s infinite linear;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0.6;
-            }
-        }
-        
-        .container {
+        .auth-container {
             width: 90%;
             max-width: 400px;
-            margin: 2rem auto;
-            perspective: 1000px;
-        }
-        
-        .auth-box {
             background: rgba(30, 30, 30, 0.8);
             backdrop-filter: blur(10px);
             border-radius: 15px;
@@ -84,13 +46,11 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
                         0 0 20px rgba(0, 255, 204, 0.3),
                         0 0 40px rgba(255, 0, 170, 0.2);
-            transform-style: preserve-3d;
-            transition: all 0.5s ease;
             position: relative;
             overflow: hidden;
         }
         
-        .auth-box::before {
+        .auth-container::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -110,12 +70,8 @@
         }
         
         @keyframes shine {
-            0%, 100% {
-                transform: rotate(30deg) translate(-30%, -30%);
-            }
-            50% {
-                transform: rotate(30deg) translate(30%, 30%);
-            }
+            0%, 100% { transform: rotate(30deg) translate(-30%, -30%); }
+            50% { transform: rotate(30deg) translate(30%, 30%); }
         }
         
         .logo {
@@ -132,7 +88,6 @@
             font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
         
         .logo p {
@@ -265,8 +220,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
-            position: relative;
-            overflow: hidden;
         }
         
         .btn:hover {
@@ -274,34 +227,16 @@
             box-shadow: 0 8px 20px rgba(0, 255, 204, 0.4);
         }
         
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0.3),
-                rgba(255, 255, 255, 0.1),
-                transparent
-            );
-            transform: rotate(30deg);
-            transition: all 0.5s ease;
-        }
-        
-        .btn:hover::after {
-            transform: rotate(30deg) translate(10%, 10%);
+        .btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .forgot-password {
             text-align: right;
-            margin: 1rem 0 2rem;
+            margin: 1rem 0;
         }
         
         .forgot-password a {
@@ -315,93 +250,67 @@
             color: var(--primary);
         }
         
-        .social-login {
-            margin-top: 2rem;
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 1rem 0;
             text-align: center;
+            display: none;
         }
         
-        .social-login p {
-            color: var(--light-gray);
-            margin-bottom: 1rem;
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff4444;
+            display: block;
+            border: 1px solid #ff4444;
+        }
+        
+        .success {
+            background: rgba(0, 255, 0, 0.1);
+            color: var(--primary);
+            display: block;
+            border: 1px solid var(--primary);
+        }
+        
+        /* Modal for password reset */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: var(--darker);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
             position: relative;
         }
         
-        .social-login p::before,
-        .social-login p::after {
-            content: '';
+        .close-modal {
             position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background: var(--gray);
-        }
-        
-        .social-login p::before {
-            left: 0;
-        }
-        
-        .social-login p::after {
-            right: 0;
-        }
-        
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-        
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gray);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .social-icon:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .social-icon.facebook:hover {
-            background: #3b5998;
-            color: white;
-        }
-        
-        .social-icon.google:hover {
-            background: #db4437;
-            color: white;
-        }
-        
-        .social-icon.twitter:hover {
-            background: #1da1f2;
-            color: white;
-        }
-        
-        .terms {
-            margin-top: 1.5rem;
-            font-size: 0.8rem;
+            top: 10px;
+            right: 10px;
             color: var(--light-gray);
-            text-align: center;
+            cursor: pointer;
+            font-size: 1.5rem;
         }
         
-        .terms a {
+        .close-modal:hover {
             color: var(--primary);
-            text-decoration: none;
         }
         
         @media (max-width: 480px) {
-            .container {
-                width: 95%;
-                padding: 1rem;
-            }
-            
-            .auth-box {
+            .auth-container {
                 padding: 1.5rem;
             }
             
@@ -409,164 +318,116 @@
                 font-size: 2rem;
             }
         }
-        
-        /* Animation classes */
-        .shake {
-            animation: shake 0.5s;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .pulse {
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 255, 204, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
-        }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
-    <div class="container">
-        <div class="auth-box">
-            <div class="logo">
-                <h1>Tates Games</h1>
-                <p>Login Page Underwork</p>
-            </div>
-            
-            <div class="tabs">
-                <div class="tab active" id="login-tab">Login</div>
-                <div class="tab" id="signup-tab">Sign Up</div>
-            </div>
-            
-            <div class="form-container">
-                <form class="form login-form active" id="login-form">
-                    <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="login-username" placeholder="Username" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="login-password" placeholder="Password" required>
-                    </div>
-                    
-                    <div class="forgot-password">
-                        <a href="#" id="forgot-password">Forgot Password?</a>
-                    </div>
-                    
-                    <button type="button" class="btn pulse" id="login-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                    
-                    <div class="social-login">
-                        <p>Or login with</p>
-                        <div class="social-icons">
-                            <div class="social-icon facebook">
-                                <i class="fab fa-facebook-f"></i>
-                            </div>
-                            <div class="social-icon google">
-                                <i class="fab fa-google"></i>
-                            </div>
-                            <div class="social-icon twitter">
-                                <i class="fab fa-twitter"></i>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>TB GAMES</h1>
+            <p>Your ultimate gaming experience</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" id="login-tab">Login</div>
+            <div class="tab" id="signup-tab">Sign Up</div>
+        </div>
+        
+        <div class="form-container">
+            <!-- Login Form -->
+            <form class="form login-form active" id="login-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email" required>
+                </div>
                 
-                <form class="form signup-form" id="signup-form">
-                    <div class="input-group">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="signup-username" placeholder="Username" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="signup-password" placeholder="Password" required>
-                    </div>
-                    
-                    <div class="input-group">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="signup-confirm-password" placeholder="Confirm Password" required>
-                    </div>
-                    
-                    <button type="button" class="btn" id="signup-btn">
-                        <i class="fas fa-user-plus"></i> Create Account
-                    </button>
-                    
-                    <div class="terms">
-                        By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                    </div>
-                </form>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="#" id="forgot-password-link">Forgot Password?</a>
+                </div>
+                
+                <div class="message" id="login-message"></div>
+                
+                <button type="submit" class="btn" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+            
+            <!-- Signup Form -->
+            <form class="form signup-form" id="signup-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
+                </div>
+                
+                <div class="message" id="signup-message"></div>
+                
+                <button type="submit" class="btn" id="signup-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Password Reset Modal -->
+    <div class="modal" id="reset-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 style="margin-bottom: 1rem; color: var(--primary);">Reset Password</h2>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="reset-email" placeholder="Enter your email">
             </div>
+            <div class="message" id="reset-message"></div>
+            <button class="btn" id="reset-btn" style="margin-top: 1rem;">
+                <i class="fas fa-paper-plane"></i> Send Reset Link
+            </button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
         
-        // Create floating particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random properties
-                const size = Math.random() * 5 + 2;
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                const delay = Math.random() * 15;
-                const duration = Math.random() * 10 + 10;
-                
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                particle.style.animationDelay = `${delay}s`;
-                particle.style.animationDuration = `${duration}s`;
-                
-                // Random color between primary and secondary
-                const colors = ['#00ffcc', '#00cca3', '#ff00aa', '#cc0088'];
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-        
-        // Initialize Firebase
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "your-app.firebaseapp.com",
-            projectId: "your-app",
-            storageBucket: "your-app.appspot.com",
-            messagingSenderId: "your-messaging-id",
-            appId: "your-app-id"
+            apiKey: "AIzaSyDfK_HayFBawYzgIcGXQsQ4ynyCrVHHL8A",
+            authDomain: "tbgames-d6995.firebaseapp.com",
+            projectId: "tbgames-d6995",
+            storageBucket: "tbgames-d6995.appspot.com",
+            messagingSenderId: "578117532273",
+            appId: "1:578117532273:web:3e52426b147f1c7e5af9d0",
+            measurementId: "G-VWLDSR92KV"
         };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
         
         // DOM Elements
         const loginTab = document.getElementById('login-tab');
         const signupTab = document.getElementById('signup-tab');
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
-        const forgotPasswordLink = document.getElementById('forgot-password');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const resetModal = document.getElementById('reset-modal');
+        const closeModal = document.querySelector('.close-modal');
         
         // Tab switching
         loginTab.addEventListener('click', () => {
@@ -587,156 +448,134 @@
             loginForm.classList.remove('active');
         });
         
-        // Form validation
-        function validatePassword(password) {
-            // At least 8 characters, one letter and one number
-            const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-            return re.test(password);
+        // Show/hide password reset modal
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetModal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            resetModal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === resetModal) {
+                resetModal.style.display = 'none';
+            }
+        });
+        
+        // Display message helper
+        function showMessage(form, text, type) {
+            const element = document.getElementById(`${form}-message`);
+            element.textContent = text;
+            element.className = `message ${type}`;
+            setTimeout(() => {
+                element.className = 'message';
+                element.textContent = '';
+            }, 5000);
         }
         
-        // Sign Up
-        document.getElementById("signup-btn").addEventListener("click", async () => {
-            const username = document.getElementById("signup-username").value.trim();
-            const password = document.getElementById("signup-password").value;
-            const confirmPassword = document.getElementById("signup-confirm-password").value;
+        // Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
             
-            if (!username || !password || !confirmPassword) {
-                alert("Please fill in all fields");
-                document.getElementById("signup-form").classList.add("shake");
-                setTimeout(() => {
-                    document.getElementById("signup-form").classList.remove("shake");
-                }, 500);
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                alert("Passwords don't match!");
-                document.getElementById("signup-confirm-password").focus();
-                document.getElementById("signup-form").classList.add("shake");
-                setTimeout(() => {
-                    document.getElementById("signup-form").classList.remove("shake");
-                }, 500);
-                return;
-            }
-            
-            if (!validatePassword(password)) {
-                alert("Password must be at least 8 characters long and contain at least one letter and one number");
-                return;
-            }
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
             
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, `${username}@game.com`, password);
-                await setDoc(doc(db, "users", username), { 
-                    balance: 10000,
-                    joinDate: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                });
-                
-                // Show success animation
-                document.getElementById("signup-btn").classList.add("pulse");
-                document.getElementById("signup-btn").innerHTML = '<i class="fas fa-check"></i> Account Created!';
-                
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                showMessage('login', 'Login successful! Redirecting...', 'success');
                 setTimeout(() => {
-                    // Switch to login tab
-                    loginTab.click();
-                    document.getElementById("login-username").value = username;
-                    document.getElementById("signup-btn").classList.remove("pulse");
-                    document.getElementById("signup-btn").innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
-                    
-                    // Reset form
-                    document.getElementById("signup-form").reset();
+                    window.location.href = 'game.html';
                 }, 1500);
             } catch (error) {
-                let errorMessage = "An error occurred";
-                if (error.code === "auth/email-already-in-use") {
-                    errorMessage = "Username already exists";
-                } else if (error.code === "auth/weak-password") {
-                    errorMessage = "Password should be at least 6 characters";
-                }
+                let message = error.message;
+                if (error.code === 'auth/invalid-email') message = 'Invalid email format';
+                if (error.code === 'auth/user-not-found') message = 'Account not found';
+                if (error.code === 'auth/wrong-password') message = 'Incorrect password';
                 
-                alert(errorMessage);
-                document.getElementById("signup-form").classList.add("shake");
-                setTimeout(() => {
-                    document.getElementById("signup-form").classList.remove("shake");
-                }, 500);
+                showMessage('login', message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
             }
         });
         
-        // Login
-        document.getElementById("login-btn").addEventListener("click", async () => {
-            const username = document.getElementById("login-username").value.trim();
-            const password = document.getElementById("login-password").value;
+        // Signup
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            const btn = document.getElementById('signup-btn');
             
-            if (!username || !password) {
-                alert("Please enter both username and password");
-                document.getElementById("login-form").classList.add("shake");
-                setTimeout(() => {
-                    document.getElementById("login-form").classList.remove("shake");
-                }, 500);
+            // Validation
+            if (password !== confirm) {
+                showMessage('signup', 'Passwords do not match', 'error');
                 return;
             }
             
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, `${username}@game.com`, password);
-                const userDoc = await getDoc(doc(db, "users", username));
-                
-                if (userDoc.exists()) {
-                    // Update last login time
-                    await setDoc(doc(db, "users", username), {
-                        lastLogin: new Date().toISOString()
-                    }, { merge: true });
-                    
-                    // Store user data
-                    sessionStorage.setItem("username", username);
-                    sessionStorage.setItem("balance", userDoc.data().balance);
-                    
-                    // Show loading state
-                    document.getElementById("login-btn").innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-                    
-                    // Simulate loading before redirect
-                    setTimeout(() => {
-                        window.location.href = "game.html";
-                    }, 1000);
-                } else {
-                    alert("User data not found.");
-                }
-            } catch (error) {
-                let errorMessage = "Login failed";
-                if (error.code === "auth/user-not-found") {
-                    errorMessage = "Username not found";
-                } else if (error.code === "auth/wrong-password") {
-                    errorMessage = "Incorrect password";
-                }
-                
-                alert(errorMessage);
-                document.getElementById("login-form").classList.add("shake");
-                setTimeout(() => {
-                    document.getElementById("login-form").classList.remove("shake");
-                }, 500);
-                
-                document.getElementById("login-btn").innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            if (password.length < 6) {
+                showMessage('signup', 'Password must be at least 6 characters', 'error');
+                return;
             }
-        });
-        
-        // Forgot Password
-        forgotPasswordLink.addEventListener("click", async (e) => {
-            e.preventDefault();
-            const username = prompt("Please enter your username to reset password:");
             
-            if (username) {
-                try {
-                    await sendPasswordResetEmail(auth, `${username}@game.com`);
-                    alert("Password reset email sent. Please check your inbox.");
-                } catch (error) {
-                    alert("Error sending reset email. Please check your username.");
-                }
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                showMessage('signup', 'Account created successfully! Please login', 'success');
+                setTimeout(() => {
+                    loginTab.click();
+                    document.getElementById('login-email').value = email;
+                    signupForm.reset();
+                }, 1500);
+            } catch (error) {
+                let message = error.message;
+                if (error.code === 'auth/email-already-in-use') message = 'Email already in use';
+                if (error.code === 'auth/invalid-email') message = 'Invalid email format';
+                if (error.code === 'auth/weak-password') message = 'Password is too weak';
+                
+                showMessage('signup', message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
             }
         });
         
-        // Initialize particles and focus on username field
-        window.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            document.getElementById("login-username").focus();
+        // Password Reset
+        document.getElementById('reset-btn').addEventListener('click', async () => {
+            const email = document.getElementById('reset-email').value;
+            const btn = document.getElementById('reset-btn');
+            const message = document.getElementById('reset-message');
+            
+            if (!email) {
+                message.textContent = 'Please enter your email';
+                message.className = 'message error';
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                message.textContent = 'Password reset email sent! Check your inbox.';
+                message.className = 'message success';
+                setTimeout(() => {
+                    resetModal.style.display = 'none';
+                    message.textContent = '';
+                }, 3000);
+            } catch (error) {
+                message.textContent = error.message;
+                message.className = 'message error';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
+            }
         });
     </script>
 </body>
