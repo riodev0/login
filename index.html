@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TB Crash</title>
+    <title>Login | TB Crash</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -28,323 +28,196 @@
             background-color: var(--dark);
             color: var(--light);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 204, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 170, 0.1) 0%, transparent 20%);
         }
         
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: rgba(30, 30, 30, 0.9);
-            border-bottom: 1px solid var(--gray);
+        .auth-container {
+            width: 90%;
+            max-width: 400px;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 255, 204, 0.3),
+                        0 0 40px rgba(255, 0, 170, 0.2);
         }
         
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
         
-        .balance {
-            background: var(--gray);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        
-        .account-btn {
-            background: var(--gray);
-            border: none;
-            color: var(--light);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        .game-container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .crash-display {
-            height: 300px;
-            background: var(--darker);
-            border-radius: 16px;
+        .tabs {
             display: flex;
-            justify-content: center;
-            align-items: center;
             margin-bottom: 2rem;
             position: relative;
-            overflow: hidden;
         }
         
-        .multiplier {
-            font-size: 4rem;
-            font-weight: 700;
+        .tab {
+            padding: 0.8rem 0;
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            color: var(--light-gray);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
             color: var(--primary);
-            z-index: 2;
         }
         
-        .graph-line {
+        .tab.active::after {
+            content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 0;
+            height: 3px;
             background: var(--primary);
-            z-index: 1;
+            z-index: 3;
+            box-shadow: 0 0 10px var(--primary);
         }
         
-        .bet-controls {
-            background: var(--darker);
-            padding: 1.5rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
         }
         
         .input-group {
-            margin-bottom: 1rem;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-gray);
         }
         
         input {
             width: 100%;
-            padding: 1rem;
+            padding: 15px 15px 15px 45px;
             background: var(--gray);
-            border: none;
+            border: 2px solid transparent;
             border-radius: 8px;
             color: var(--light);
             font-size: 1rem;
+            transition: all 0.3s ease;
         }
         
-        .quick-bets {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
         
-        .quick-bet {
-            flex: 1;
-            padding: 0.5rem;
-            background: var(--gray);
-            border: none;
-            border-radius: 4px;
-            color: var(--light);
-            cursor: pointer;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .btn-bet, .btn-cashout {
-            flex: 1;
-            padding: 1rem;
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
             border: none;
             border-radius: 8px;
+            color: var(--darker);
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            margin: 20px 0 10px;
         }
         
-        .btn-bet {
-            background: var(--primary);
-            color: var(--dark);
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 204, 0.4);
         }
         
-        .btn-cashout {
-            background: var(--secondary);
-            color: var(--light);
-        }
-        
-        .btn-bet:hover, .btn-cashout:hover {
-            transform: translateY(-2px);
-        }
-        
-        .btn-cashout:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .history {
-            background: var(--darker);
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-        
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .history-item {
-            background: var(--gray);
-            padding: 0.75rem;
+        .message {
+            padding: 10px;
             border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background: var(--darker);
-            padding: 2rem;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--light);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .referral-code {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .referral-code input {
-            flex: 1;
-            background: var(--gray);
-            border: none;
-            padding: 1rem;
-            border-radius: 8px;
-            color: var(--light);
-        }
-        
-        .btn-copy {
-            background: var(--primary);
-            border: none;
-            padding: 0 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        
-        .referral-stats {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .stat {
-            flex: 1;
-            background: var(--gray);
-            padding: 1rem;
-            border-radius: 8px;
+            margin: 1rem 0;
             text-align: center;
+            display: none;
         }
         
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff4444;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="logo">TB CRASH</div>
-        <div class="balance">$<span id="balance">0</span></div>
-        <button class="account-btn" id="account-btn">
-            <i class="fas fa-user"></i>
-        </button>
-    </nav>
-
-    <div class="game-container">
-        <div class="crash-display">
-            <div class="multiplier" id="multiplier">1.00x</div>
-            <div class="graph-line" id="graph-line"></div>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>TB CRASH</h1>
         </div>
         
-        <div class="bet-controls">
+        <div class="tabs">
+            <div class="tab active" id="login-tab">Login</div>
+            <div class="tab" id="signup-tab">Sign Up</div>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="login-form" class="form active">
             <div class="input-group">
-                <input type="number" id="bet-amount" placeholder="Bet amount" min="1">
-                <div class="quick-bets">
-                    <button class="quick-bet" data-action="half">½</button>
-                    <button class="quick-bet" data-action="double">2x</button>
-                    <button class="quick-bet" data-action="max">MAX</button>
-                </div>
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="login-email" placeholder="Email" required>
             </div>
             
-            <div class="action-buttons">
-                <button class="btn-bet" id="place-bet">BET</button>
-                <button class="btn-cashout" id="cash-out" disabled>CASH OUT</button>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Password" required>
             </div>
-        </div>
+            
+            <button type="submit" class="btn">Login</button>
+        </form>
         
-        <div class="history">
-            <h3>Recent Games</h3>
-            <div class="history-list" id="history-list"></div>
-        </div>
-    </div>
-
-    <!-- Account Modal -->
-    <div class="modal" id="account-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Account</h3>
-                <button class="modal-close">&times;</button>
+        <!-- Signup Form -->
+        <form id="signup-form" class="form">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="signup-email" placeholder="Email" required>
             </div>
-            <p>Logged in as: <span id="user-email"></span></p>
-            <button class="btn-bet" id="logout-btn" style="margin-top: 1rem;">Logout</button>
-            <button class="btn-bet" id="referral-btn" style="margin-top: 0.5rem;">Referral Program</button>
-        </div>
-    </div>
-
-    <!-- Referral Modal -->
-    <div class="modal" id="referral-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Referral Program</h3>
-                <button class="modal-close">&times;</button>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signup-password" placeholder="Password" required>
             </div>
-            <div class="referral-code">
-                <input type="text" id="user-referral-code" readonly>
-                <button class="btn-copy" id="copy-btn">Copy</button>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
             </div>
-            <div class="referral-stats">
-                <div class="stat">
-                    <div class="stat-value" id="referral-count">0</div>
-                    <div class="stat-label">Referrals</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="referral-earnings">0</div>
-                    <div class="stat-label">Earnings</div>
-                </div>
+            
+            <div class="input-group">
+                <i class="fas fa-user-friends"></i>
+                <input type="text" id="referral-code" placeholder="Referral Code (Optional)">
             </div>
-        </div>
+            
+            <button type="submit" class="btn">Create Account</button>
+        </form>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
@@ -367,248 +240,121 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         
-        // Game State
-        let currentUser = null;
-        let userData = null;
-        let gameActive = false;
-        let currentMultiplier = 1.0;
-        let currentBet = 0;
-        let crashPoint = 1.0;
-        let gameInterval = null;
-        let graphInterval = null;
-        let startTime = 0;
-        
-        // DOM Elements
-        const balanceEl = document.getElementById('balance');
-        const multiplierEl = document.getElementById('multiplier');
-        const betAmountEl = document.getElementById('bet-amount');
-        const placeBetBtn = document.getElementById('place-bet');
-        const cashOutBtn = document.getElementById('cash-out');
-        const historyList = document.getElementById('history-list');
-        const accountBtn = document.getElementById('account-btn');
-        const accountModal = document.getElementById('account-modal');
-        const referralModal = document.getElementById('referral-modal');
-        const userEmailEl = document.getElementById('user-email');
-        const userReferralCodeEl = document.getElementById('user-referral-code');
-        const referralCountEl = document.getElementById('referral-count');
-        const referralEarningsEl = document.getElementById('referral-earnings');
-        const logoutBtn = document.getElementById('logout-btn');
-        const referralBtn = document.getElementById('referral-btn');
-        const copyBtn = document.getElementById('copy-btn');
-        const graphLine = document.getElementById('graph-line');
-        
-        // Auth State Listener
-        auth.onAuthStateChanged(async user => {
-            if (!user) {
-                window.location.href = 'https://riodev0.github.io/login';
-                return;
-            }
-            
-            currentUser = user;
-            userEmailEl.textContent = user.email;
-            await loadUserData();
-            loadHistory();
+        // Tab Switching
+        document.getElementById('login-tab').addEventListener('click', () => {
+            document.getElementById('login-tab').classList.add('active');
+            document.getElementById('signup-tab').classList.remove('active');
+            document.getElementById('login-form').classList.add('active');
+            document.getElementById('signup-form').classList.remove('active');
         });
         
-        // Load User Data
-        async function loadUserData() {
-            const doc = await db.collection('users').doc(currentUser.uid).get();
-            userData = doc.data();
-            balanceEl.textContent = userData.balance;
-            
-            // Set referral data
-            if (userData.referralCode) {
-                userReferralCodeEl.value = userData.referralCode;
-                referralCountEl.textContent = userData.referrals?.length || 0;
-                referralEarningsEl.textContent = userData.referralEarnings || 0;
-            }
-        }
-        
-        // Load Game History
-        async function loadHistory() {
-            const snapshot = await db.collection('games')
-                .orderBy('timestamp', 'desc')
-                .limit(10)
-                .get();
-            
-            historyList.innerHTML = '';
-            snapshot.forEach(doc => {
-                const game = doc.data();
-                const item = document.createElement('div');
-                item.className = 'history-item';
-                item.innerHTML = `
-                    <span>${game.multiplier}x</span>
-                    <span>$${game.bet}</span>
-                `;
-                historyList.appendChild(item);
-            });
-        }
-        
-        // Game Logic
-        function calculateCrashPoint() {
-            // Simplified crash algorithm
-            const e = 100 / (1 + Math.random() * 10);
-            return Math.max(1, e.toFixed(2));
-        }
-        
-        function startGame() {
-            gameActive = true;
-            currentMultiplier = 1.0;
-            crashPoint = calculateCrashPoint();
-            startTime = Date.now();
-            
-            placeBetBtn.disabled = true;
-            cashOutBtn.disabled = false;
-            
-            // Start multiplier animation
-            gameInterval = setInterval(updateMultiplier, 50);
-            
-            // Start graph animation
-            graphLine.style.height = '0%';
-            graphInterval = setInterval(updateGraph, 50);
-        }
-        
-        function updateMultiplier() {
-            const elapsed = (Date.now() - startTime) / 1000;
-            currentMultiplier = 1 + (elapsed * 0.05);
-            
-            if (currentMultiplier >= crashPoint) {
-                endGame(false);
-                return;
-            }
-            
-            multiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
-        }
-        
-        function updateGraph() {
-            const progress = (currentMultiplier - 1) / (crashPoint - 1) * 100;
-            graphLine.style.height = `${progress}%`;
-            
-            // Change color based on multiplier
-            if (currentMultiplier > crashPoint * 0.8) {
-                graphLine.style.background = 'var(--secondary)';
-            } else {
-                graphLine.style.background = 'var(--primary)';
-            }
-        }
-        
-        function endGame(cashedOut) {
-            clearInterval(gameInterval);
-            clearInterval(graphInterval);
-            gameActive = false;
-            
-            const multiplier = cashedOut ? currentMultiplier : 1;
-            const winnings = currentBet * multiplier;
-            
-            // Update balance
-            db.collection('users').doc(currentUser.uid).update({
-                balance: firebase.firestore.FieldValue.increment(winnings - currentBet)
-            });
-            
-            // Save game result
-            db.collection('games').add({
-                bet: currentBet,
-                multiplier: multiplier.toFixed(2),
-                cashedOut: cashedOut,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            
-            // Reset UI
-            placeBetBtn.disabled = false;
-            cashOutBtn.disabled = true;
-            multiplierEl.textContent = '1.00x';
-            graphLine.style.height = '0%';
-            
-            // Reload data
-            loadUserData();
-            loadHistory();
-        }
-        
-        // Event Listeners
-        placeBetBtn.addEventListener('click', () => {
-            const betAmount = parseFloat(betAmountEl.value);
-            
-            if (isNaN(betAmount) || betAmount < 1) {
-                alert('Please enter a valid bet amount');
-                return;
-            }
-            
-            if (betAmount > userData.balance) {
-                alert('Insufficient balance');
-                return;
-            }
-            
-            currentBet = betAmount;
-            startGame();
+        document.getElementById('signup-tab').addEventListener('click', () => {
+            document.getElementById('signup-tab').classList.add('active');
+            document.getElementById('login-tab').classList.remove('active');
+            document.getElementById('signup-form').classList.add('active');
+            document.getElementById('login-form').classList.remove('active');
         });
         
-        cashOutBtn.addEventListener('click', () => {
-            if (!gameActive) return;
-            endGame(true);
-        });
+        // Handle Referral Code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const referralCode = urlParams.get('ref');
+        if (referralCode) {
+            document.getElementById('referral-code').value = referralCode;
+        }
         
-        // Quick Bet Buttons
-        document.querySelectorAll('.quick-bet').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const action = btn.getAttribute('data-action');
-                let newAmount = parseFloat(betAmountEl.value) || 0;
+        // Sign Up
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            const referral = document.getElementById('referral-code').value;
+            
+            if (password !== confirm) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 
-                switch(action) {
-                    case 'half':
-                        newAmount = Math.floor(newAmount / 2);
-                        break;
-                    case 'double':
-                        newAmount = newAmount * 2;
-                        break;
-                    case 'max':
-                        newAmount = userData.balance;
-                        break;
+                // Create user document
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    email: email,
+                    balance: 1000,
+                    referralCode: generateReferralCode(),
+                    referredBy: referral || null,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Apply referral if exists
+                if (referral) {
+                    await applyReferral(referral, userCredential.user.uid);
                 }
                 
-                betAmountEl.value = newAmount;
-            });
-        });
-        
-        // Account Modal
-        accountBtn.addEventListener('click', () => {
-            accountModal.style.display = 'flex';
-        });
-        
-        // Referral Modal
-        referralBtn.addEventListener('click', () => {
-            accountModal.style.display = 'none';
-            referralModal.style.display = 'flex';
-        });
-        
-        // Copy Referral Code
-        copyBtn.addEventListener('click', () => {
-            userReferralCodeEl.select();
-            document.execCommand('copy');
-            alert('Referral code copied!');
-        });
-        
-        // Logout
-        logoutBtn.addEventListener('click', () => {
-            auth.signOut();
-        });
-        
-        // Close Modals
-        document.querySelectorAll('.modal-close').forEach(btn => {
-            btn.addEventListener('click', () => {
-                accountModal.style.display = 'none';
-                referralModal.style.display = 'none';
-            });
-        });
-        
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === accountModal) {
-                accountModal.style.display = 'none';
-            }
-            if (e.target === referralModal) {
-                referralModal.style.display = 'none';
+                window.location.href = 'home.html';
+            } catch (error) {
+                showError(error.message);
             }
         });
+        
+        // Login
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                window.location.href = 'home.html';
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+        
+        // Helper Functions
+        function showError(message) {
+            const errorElement = document.createElement('div');
+            errorElement.className = 'message error';
+            errorElement.textContent = message;
+            
+            const forms = document.querySelectorAll('.form');
+            forms.forEach(form => {
+                const existingError = form.querySelector('.message.error');
+                if (existingError) {
+                    form.removeChild(existingError);
+                }
+                form.insertBefore(errorElement, form.querySelector('.btn'));
+            });
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        function generateReferralCode() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+        
+        async function applyReferral(code, newUserId) {
+            const referrerSnapshot = await db.collection('users')
+                .where('referralCode', '==', code).get();
+            
+            if (!referrerSnapshot.empty) {
+                const referrerId = referrerSnapshot.docs[0].id;
+                await db.collection('users').doc(referrerId).update({
+                    referrals: firebase.firestore.FieldValue.arrayUnion(newUserId),
+                    referralEarnings: firebase.firestore.FieldValue.increment(100)
+                });
+                
+                // Give bonus to new user
+                await db.collection('users').doc(newUserId).update({
+                    balance: firebase.firestore.FieldValue.increment(500)
+                });
+            }
+        }
     </script>
 </body>
 </html>
