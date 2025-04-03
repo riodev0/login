@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Sign Up | TB Games</title>
+    <title>Login | TB Crash</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -46,8 +46,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
                         0 0 20px rgba(0, 255, 204, 0.3),
                         0 0 40px rgba(255, 0, 170, 0.2);
-            position: relative;
-            overflow: visible;
         }
         
         .logo {
@@ -63,30 +61,12 @@
             color: transparent;
             font-weight: 800;
             letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-        }
-        
-        .logo p {
-            color: var(--light-gray);
-            font-size: 0.9rem;
         }
         
         .tabs {
             display: flex;
-            justify-content: space-between;
             margin-bottom: 2rem;
             position: relative;
-        }
-        
-        .tabs::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--gray);
-            z-index: 1;
         }
         
         .tab {
@@ -98,7 +78,6 @@
             color: var(--light-gray);
             font-weight: 600;
             transition: all 0.3s ease;
-            z-index: 2;
         }
         
         .tab.active {
@@ -117,28 +96,12 @@
             box-shadow: 0 0 10px var(--primary);
         }
         
-        .form-container {
-            min-height: 350px;
-            position: relative;
-            overflow: visible;
-            margin-bottom: 20px;
-        }
-        
         .form {
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(100%);
-            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: none;
         }
         
         .form.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateX(0);
+            display: block;
         }
         
         .input-group {
@@ -152,7 +115,6 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--light-gray);
-            transition: all 0.3s ease;
         }
         
         input {
@@ -172,10 +134,6 @@
             box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
         
-        input:focus + i {
-            color: var(--primary);
-        }
-        
         .btn {
             width: 100%;
             padding: 15px;
@@ -187,19 +145,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
             margin: 20px 0 10px;
         }
         
         .btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 255, 204, 0.4);
-        }
-        
-        .btn:disabled {
-            background: var(--gray);
-            cursor: not-allowed;
-            transform: none;
         }
         
         .message {
@@ -214,44 +165,13 @@
             background: rgba(255, 0, 0, 0.1);
             color: #ff4444;
             display: block;
-            border: 1px solid #ff4444;
-        }
-        
-        .success {
-            background: rgba(0, 255, 0, 0.1);
-            color: var(--primary);
-            display: block;
-            border: 1px solid var(--primary);
-        }
-        
-        .terms {
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            color: var(--light-gray);
-            text-align: center;
-        }
-        
-        .terms a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: 1.5rem;
-            }
-            
-            .logo h1 {
-                font-size: 2rem;
-            }
         }
     </style>
 </head>
 <body>
     <div class="auth-container">
         <div class="logo">
-            <h1>TB GAMES</h1>
-            <p>Your ultimate gaming experience</p>
+            <h1>TB CRASH</h1>
         </div>
         
         <div class="tabs">
@@ -259,56 +179,52 @@
             <div class="tab" id="signup-tab">Sign Up</div>
         </div>
         
-        <div class="form-container">
-            <!-- Login Form -->
-            <form class="form login-form active" id="login-form">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="login-email" placeholder="Email" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="login-password" placeholder="Password" required>
-                </div>
-                
-                <button type="submit" class="btn" id="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-            </form>
+        <!-- Login Form -->
+        <form id="login-form" class="form active">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="login-email" placeholder="Email" required>
+            </div>
             
-            <!-- Signup Form -->
-            <form class="form signup-form" id="signup-form">
-                <div class="input-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="signup-email" placeholder="Email" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="signup-password" placeholder="Password" required>
-                </div>
-                
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
-                </div>
-                
-                <button type="submit" class="btn" id="signup-btn">
-                    <i class="fas fa-user-plus"></i> Create Account
-                </button>
-                
-                <div class="terms">
-                    By signing up, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                </div>
-            </form>
-        </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Password" required>
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+        </form>
+        
+        <!-- Signup Form -->
+        <form id="signup-form" class="form">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="signup-email" placeholder="Email" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signup-password" placeholder="Password" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signup-confirm" placeholder="Confirm Password" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-user-friends"></i>
+                <input type="text" id="referral-code" placeholder="Referral Code (Optional)">
+            </div>
+            
+            <button type="submit" class="btn">Create Account</button>
+        </form>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
     <script>
-        // Firebase configuration
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDfK_HayFBawYzgIcGXQsQ4ynyCrVHHL8A",
             authDomain: "tbgames-d6995.firebaseapp.com",
@@ -318,167 +234,127 @@
             appId: "1:578117532273:web:3e52426b147f1c7e5af9d0",
             measurementId: "G-VWLDSR92KV"
         };
-
+        
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
-        // DOM elements
-        const loginTab = document.getElementById('login-tab');
-        const signupTab = document.getElementById('signup-tab');
-        const loginForm = document.getElementById('login-form');
-        const signupForm = document.getElementById('signup-form');
-
-        // Tab switching
-        function switchForms(form) {
-            if (form === 'login') {
-                loginTab.classList.add('active');
-                signupTab.classList.remove('active');
-                loginForm.classList.add('active');
-                signupForm.classList.remove('active');
-            } else {
-                signupTab.classList.add('active');
-                loginTab.classList.remove('active');
-                signupForm.classList.add('active');
-                loginForm.classList.remove('active');
-            }
+        const db = firebase.firestore();
+        
+        // Tab Switching
+        document.getElementById('login-tab').addEventListener('click', () => {
+            document.getElementById('login-tab').classList.add('active');
+            document.getElementById('signup-tab').classList.remove('active');
+            document.getElementById('login-form').classList.add('active');
+            document.getElementById('signup-form').classList.remove('active');
+        });
+        
+        document.getElementById('signup-tab').addEventListener('click', () => {
+            document.getElementById('signup-tab').classList.add('active');
+            document.getElementById('login-tab').classList.remove('active');
+            document.getElementById('signup-form').classList.add('active');
+            document.getElementById('login-form').classList.remove('active');
+        });
+        
+        // Handle Referral Code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const referralCode = urlParams.get('ref');
+        if (referralCode) {
+            document.getElementById('referral-code').value = referralCode;
         }
-
-        // Validate email
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!re.test(email)) {
-                showMessage('signup', 'Please enter a valid email address', 'error');
-                return false;
-            }
-            return true;
-        }
-
-        // Show message
-        function showMessage(form, text, type) {
-            const element = document.getElementById(`${form}-message`) || document.createElement('div');
-            element.id = `${form}-message`;
-            element.textContent = text;
-            element.className = `message ${type}`;
-            
-            const formElement = document.getElementById(`${form}-form`);
-            if (!formElement.querySelector(`#${form}-message`)) {
-                formElement.insertBefore(element, formElement.querySelector('.btn'));
-            }
-            
-            setTimeout(() => {
-                element.className = 'message';
-                element.textContent = '';
-            }, 5000);
-        }
-
+        
         // Sign Up
-        signupForm.addEventListener("submit", async (e) => {
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const email = document.getElementById("signup-email").value.trim();
-            const password = document.getElementById("signup-password").value;
-            const confirm = document.getElementById("signup-confirm").value;
-            const btn = document.getElementById("signup-btn");
-            
-            // Validation
-            if (!email || !password || !confirm) {
-                showMessage('signup', 'Please fill in all fields', 'error');
-                return;
-            }
-            
-            if (!validateEmail(email)) return;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+            const referral = document.getElementById('referral-code').value;
             
             if (password !== confirm) {
-                showMessage('signup', 'Passwords do not match', 'error');
+                showError('Passwords do not match');
                 return;
             }
-            
-            if (password.length < 6) {
-                showMessage('signup', 'Password must be at least 6 characters', 'error');
-                return;
-            }
-            
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
             
             try {
-                // Create auth user
-                await auth.createUserWithEmailAndPassword(email, password);
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                 
-                // Success
-                showMessage('signup', 'Account created! Logging you in...', 'success');
-                btn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                // Create user document
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    email: email,
+                    balance: 1000,
+                    referralCode: generateReferralCode(),
+                    referredBy: referral || null,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
                 
-                // Auto login
-                setTimeout(() => {
-                    window.location.href = "https://riodev0.github.io/home";
-                }, 1500);
-                
-            } catch (error) {
-                console.error("Signup error:", error);
-                let errorMessage = "Signup failed. Please try again.";
-                
-                if (error.code === "auth/email-already-in-use") {
-                    errorMessage = "Email already in use";
-                } else if (error.code === "auth/invalid-email") {
-                    errorMessage = "Invalid email format";
-                } else if (error.code === "auth/weak-password") {
-                    errorMessage = "Password is too weak (min 6 characters)";
+                // Apply referral if exists
+                if (referral) {
+                    await applyReferral(referral, userCredential.user.uid);
                 }
                 
-                showMessage('signup', errorMessage, 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                window.location.href = 'home.html';
+            } catch (error) {
+                showError(error.message);
             }
         });
-
+        
         // Login
-        loginForm.addEventListener("submit", async (e) => {
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const email = document.getElementById("login-email").value.trim();
-            const password = document.getElementById("login-password").value;
-            const btn = document.getElementById("login-btn");
-            
-            if (!email || !password) {
-                showMessage('login', 'Please enter both email and password', 'error');
-                return;
-            }
-            
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
             try {
                 await auth.signInWithEmailAndPassword(email, password);
-                
-                // Redirect to home
-                window.location.href = "https://riodev0.github.io/home";
-                
+                window.location.href = 'home.html';
             } catch (error) {
-                console.error("Login error:", error);
-                let errorMessage = "Login failed. Please try again.";
-                
-                if (error.code === "auth/user-not-found") {
-                    errorMessage = "Email not found";
-                } else if (error.code === "auth/wrong-password") {
-                    errorMessage = "Incorrect password";
-                } else if (error.code === "auth/invalid-email") {
-                    errorMessage = "Invalid email format";
-                }
-                
-                showMessage('login', errorMessage, 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                showError(error.message);
             }
         });
-
-        // Initialize form
-        switchForms('login');
-
-        // Add event listeners for tabs
-        loginTab.addEventListener('click', () => switchForms('login'));
-        signupTab.addEventListener('click', () => switchForms('signup'));
+        
+        // Helper Functions
+        function showError(message) {
+            const errorElement = document.createElement('div');
+            errorElement.className = 'message error';
+            errorElement.textContent = message;
+            
+            const forms = document.querySelectorAll('.form');
+            forms.forEach(form => {
+                const existingError = form.querySelector('.message.error');
+                if (existingError) {
+                    form.removeChild(existingError);
+                }
+                form.insertBefore(errorElement, form.querySelector('.btn'));
+            });
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+        
+        function generateReferralCode() {
+            return Math.random().toString(36).substr(2, 8).toUpperCase();
+        }
+        
+        async function applyReferral(code, newUserId) {
+            const referrerSnapshot = await db.collection('users')
+                .where('referralCode', '==', code).get();
+            
+            if (!referrerSnapshot.empty) {
+                const referrerId = referrerSnapshot.docs[0].id;
+                await db.collection('users').doc(referrerId).update({
+                    referrals: firebase.firestore.FieldValue.arrayUnion(newUserId),
+                    referralEarnings: firebase.firestore.FieldValue.increment(100)
+                });
+                
+                // Give bonus to new user
+                await db.collection('users').doc(newUserId).update({
+                    balance: firebase.firestore.FieldValue.increment(500)
+                });
+            }
+        }
     </script>
 </body>
 </html>
